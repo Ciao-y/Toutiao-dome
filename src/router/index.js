@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
 Vue.use(VueRouter)
 const routes = [
   // 重定向
@@ -39,6 +38,15 @@ const routes = [
     path: '/search',
     name: 'search',
     component: () => import('../views/search/search.vue')
+  }, {
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('../views/article/article.vue'),
+    props: true
+  }, {
+    path: '/user/profile',
+    name: 'user-profile',
+    component: () => import('../views/user-profile/user-profile.vue')
   }
 ]
 

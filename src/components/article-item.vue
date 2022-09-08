@@ -1,5 +1,16 @@
+<!-- :to="`/article/' ${article.art_id}`" -->
 <template>
-  <van-cell class="artcle_item">
+  <van-cell class="artcle_item"
+  :to="{
+    // 根据路由的名称跳转
+  name: 'article',
+  // 传递路由动态参数
+  params: {
+    // 属性名:动态参数
+    articleId:article.art_id
+  }
+  }"
+  >
     <div slot="title" class="title van-multi-ellipsis--l2">{{ article.title }}</div>
     <div slot="label">
       <div class="cover-wrap" v-if="article.cover.type === 3">

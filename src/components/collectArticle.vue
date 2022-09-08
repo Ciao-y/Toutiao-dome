@@ -1,39 +1,36 @@
 <template>
-  <div class="search_history">
-    <van-cell title="搜索历史">
-     <div v-if="isShow" >
-      <span @click="$emit('AllHistoryList')">全部删除</span>
-      &nbsp;
-      <span @click="isShow=false">完成</span>
-     </div>
-      <van-icon name="delete" v-else @click="isShow=true"/>
-    </van-cell>
-    <van-cell :title="item"
-    v-for="(item,index) in HistoryList"
-    :key="index"
-    @click="onhistoryclick(item,index)">
-    <van-icon name="close" v-if="isShow"/>
-    </van-cell>
-
+  <div class="collect_article">
+    <van-icon
+      :color="value ? '#ffa500' : '#777'"
+      :name="value ? 'star' : 'star-o'"
+      @click="onCllect"
+      :loading="loading"
+    />
   </div>
 </template>
 
 <script>
 // 这里可以导入其他文件(比如: 组件、工具js、第三方插件js、json文件、图片文件...)
 // 例如: import <组件名称> from '<组件路径>';
+import { addCollect, deletCollect } from '@/api/article'
 export default {
 // import 引入的组件需要注入到对象中才能使用
   components: {},
   props: {
-    HistoryList: {
-      type: Array,
+    value: {
+      type: Boolean,
       required: true
+    },
+    CollectId: {
+      type: [Number, String, Object],
+      required: true
+
     }
   },
   data () {
     // 这里存放数据
     return {
-      isShow: false // 控制删除显示状态
+      loading: false
 
     }
   },
@@ -44,19 +41,30 @@ export default {
   watch: {},
   // 方法集合
   methods: {
-    onhistoryclick (item, index) {
-      if (this.isShow) {
-        //  删除状态,删除历史记录
-        // eslint-disable-next-line vue/no-mutating-props
-        this.HistoryList.splice(index, 1)
-      } else {
-        // 非删除状态 直接进去搜索
-        this.$emit('Search', item)
+    async onCllect () {
+      this.loading = true
+      try {
+        if (this.value) {
+          // 已收藏 点击取消收藏
+          await deletCollect(this.CollectId)
+        } else {
+          // 没有收藏 点击收藏
+          await addCollect(this.CollectId)
+        }
+
+        //   更新视图
+        this.$toast.success(!this.value ? '收藏成功' : '取消收藏')
+        this.$emit('input', !this.value)
+      } catch (err) {
+        this.$toast.fail('请稍后再试')
       }
+      this.loading = false
     }
   },
   // 生命周期 - 创建完成（可以访问当前 this 实例）
-  created () {},
+  created () {
+    this.onCllect()
+  },
   // 生命周期 - 挂载完成（可以访问 DOM 元素）
   mounted () {},
   // 生命周期 - 创建之前
@@ -75,6 +83,4 @@ export default {
   activated () {}
 }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

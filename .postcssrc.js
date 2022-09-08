@@ -36,7 +36,9 @@ module.exports = {
 
       // 配置要转换的 CSS 属性
       // * 表示所有
-      propList: ['*']
+      propList: ['*'],
+      // 配置不需要转换rem适配的样式资源
+      exclude: 'github-markdown'
     }
   }
 }

@@ -29,7 +29,6 @@ export default {
       SuggestionsList: [] // 建议列表的数据
     }
   },
-
   // 计算属性 类似于 data 概念
   computed: {},
   // 监控 data 中的数据变化
@@ -47,7 +46,6 @@ export default {
         // console.log(value)
       }, 300),
       immediate: true // 开始就立即执行一次
-
     }
   },
   // 方法集合
@@ -55,6 +53,9 @@ export default {
     async SearChSuggestions (q) {
       try {
         const { data } = await SuggestionsAPI(q)
+        if (data.data.options.length === 0 || data.data.options === null) {
+          data.data.options[0] = this.SuggestionsList
+        }
         // console.log(this.SuggestionsList)
         this.SuggestionsList = data.data.options
       } catch (err) {
@@ -63,21 +64,20 @@ export default {
     },
     highlight (text) {
       const highlightStr = `<span class="active">${this.Search_text}</sapn>`
-      const reg = new RegExp(this.Search_text, 'gi')
-      return text.replace(reg, highlightStr)
+      // 方案一
+      // const reg = new RegExp(this.Search_text, 'gi')
+      // return text.replace(reg, highlightStr)
+      return text && text.split(this.Search_text).join(highlightStr)
     }
   },
   // 生命周期 - 创建完成（可以访问当前 this 实例）
   created () {}
-
 }
 </script>
 <style scoped lang="less">
   .search_suggestion{
     /deep/span.active{
       color: #3296fa;
-
     }
   }
-
 </style>

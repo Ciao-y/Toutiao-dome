@@ -35,3 +35,43 @@ export const channel = () => {
     url: '/v1_0/user/channels'
   })
 }
+// 关注用户
+export const addFollow = target => {
+  return request({
+    method: 'POST',
+    url: '/v1_0/user/followings',
+    data: {
+      target
+    }
+  })
+}// 取消关注用户
+export const deleFollow = target => {
+  return request({
+    method: 'DELETE',
+    url: '/v1_0/user/followings/$target'
+
+  })
+}
+// 获取当前用户资料
+export const getUserProfile = target => {
+  return request({
+    method: 'GET',
+    url: '/v1_0/user/profile'
+  })
+}
+// 更新用戶資料
+export const updateUserProfile = data => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/profile',
+    data
+  })
+}
+// 头像裁剪
+export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/photo',
+    data
+  })
+}

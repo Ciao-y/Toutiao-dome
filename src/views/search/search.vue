@@ -28,7 +28,11 @@
     />
 
     <!-- 搜索历史记录 -->
-    <History v-else/>
+    <History v-else
+    :HistoryList="HistoryList"
+    @AllHistoryList="HistoryList=[]"
+    @Search="onSearch"
+    />
 
   </div>
 </template>
@@ -39,6 +43,7 @@
 import Result from './components/search-result.vue'
 import History from './components/search-history.vue'
 import Suggestion from './components/search-suggestion.vue'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   // import 引入的组件需要注入到对象中才能使用
   components: {
@@ -48,22 +53,36 @@ export default {
   },
   props: {},
   data () {
-    // 这里存放数据
     return {
       Searchvalue: '', // 搜索文本
-      isShow: false // 控制搜索结果的显示
+      isShow: false, // 控制搜索结果的显示
+      HistoryList: getItem('TOUTIOA_SEARCH_HISTORIES') || [] // 搜索的历史记录
     }
   },
 
   // 计算属性 类似于 data 概念
   computed: {},
   // 监控 data 中的数据变化
-  watch: {},
+  watch: {
+    HistoryList (value) {
+      // console.log(111)
+      setItem('TOUTIOA_SEARCH_HISTORIES', value)
+    }
+  },
   // 方法集合
   methods: {
     onSearch (val) {
-      // console.log(val)
+      // 更新文本框内容
       this.Searchvalue = val
+      // 存儲搜索歷史記錄
+      // 要求：不要有歷史記錄 ，最新的排在最前面
+      // 方法返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1。
+      const index = this.HistoryList.indexOf(val)
+      if (index !== -1) {
+        this.HistoryList.splice(index, 1)
+      }
+      this.HistoryList.unshift(val)
+      // 显示搜索结果
       this.isShow = true
     },
     onCancel () {

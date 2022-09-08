@@ -55,7 +55,7 @@ export default {
           pei_page: this.pei_Page, // 每页大小
           q: this.Search_text // 查询关键字
         })
-        console.log(data)
+        // console.log(data)
         // 2.将数据添加到数据列表中
         const { results } = data.data
         this.list.push(...results)
